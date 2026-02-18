@@ -71,6 +71,9 @@ function renderModal(idea: IdeaLabIdea): string {
     </div>
     ${descriptionHtml}
     ${projectLinkHtml}
+    <div class="modal__branding">
+      <img src="/s2-lovable-icons.png" alt="Seven2 x Loveable" class="modal__branding-img">
+    </div>
   `
 }
 

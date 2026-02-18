@@ -728,6 +728,25 @@
   text-decoration: none;
 }
 
+.modal__branding {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: center;
+}
+
+.modal__branding-img {
+  height: 24px;
+  width: auto;
+  opacity: 0.4;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.modal__branding-img:hover {
+  opacity: 0.7;
+}
+
 @media (max-width: 640px) {
   .modal {
     padding: var(--space-5);
