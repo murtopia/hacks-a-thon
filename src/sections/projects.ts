@@ -52,15 +52,10 @@ function renderModal(idea: IdeaLabIdea): string {
       </a>`
     : ''
 
-  const sparksHtml = idea.sparks > 0
-    ? `<span class="modal__sparks">${idea.sparks} spark${idea.sparks !== 1 ? 's' : ''}</span>`
-    : ''
-
   return `
     <div class="modal__header">
       <div class="modal__header-meta">
         <span class="project-card__status ${statusClass}">${statusLabel}</span>
-        ${sparksHtml}
       </div>
       <button class="modal__close" aria-label="Close modal" type="button">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
