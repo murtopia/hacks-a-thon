@@ -19,6 +19,11 @@
   height: 56px;
 }
 
+.nav__brand-img {
+  height: 28px;
+  width: auto;
+}
+
 .nav__brand-text {
   font-family: var(--font-sans);
   font-size: var(--text-sm);
@@ -210,27 +215,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-4);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
 }
 
-.footer__brand {
-  font-family: var(--font-sans);
-  font-size: var(--text-lg);
-  font-weight: 600;
-  text-decoration: none;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
-}
-
-.footer__brand:hover {
-  text-decoration: none;
-  opacity: 0.7;
-}
-
-.footer__divider {
-  color: var(--text-tertiary);
-  font-weight: 300;
+.footer__brand-img {
+  height: 40px;
+  width: auto;
 }
 
 .footer__venture {
