@@ -19,6 +19,32 @@
   height: 56px;
 }
 
+.lockup {
+  position: relative;
+  display: inline-flex;
+}
+
+.lockup__link {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  text-decoration: none;
+}
+
+.lockup__link--left {
+  left: 0;
+  width: 50%;
+}
+
+.lockup__link--right {
+  right: 0;
+  width: 50%;
+}
+
+.lockup__link:hover {
+  text-decoration: none;
+}
+
 .nav__brand-img {
   height: 28px;
   width: auto;
