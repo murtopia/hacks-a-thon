@@ -34,12 +34,16 @@ export interface Reflection {
   is_featured: boolean
 }
 
+// Seven2 organization ID in IdeaLab
+const SEVEN2_ORG_ID = '16a200e8-7125-47f3-b694-063f5bf53479'
+
 // ── IdeaLab Queries ──
 
 export async function fetchIdeas(): Promise<IdeaLabIdea[]> {
   const { data, error } = await idealab
     .from('ideas')
     .select('id, title, pitch, description, submitter, sparks, status, project_url, created_at')
+    .eq('organization_id', SEVEN2_ORG_ID)
     .order('created_at', { ascending: false })
 
   if (error) {
