@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Hacks-a-Thon — Seven2 x Loveable</title>
+  <meta name="description" content="A focused, time-blocked experiment designed to help everyone at Seven2 learn how to build with AI. From idea to live demo in just a few weeks.">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="The Hacks-a-Thon — Seven2 x Loveable">
+  <meta property="og:description" content="A focused, time-blocked experiment designed to help everyone at Seven2 learn how to build with AI.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hacks.murtopolis.com">
+  <meta property="og:image" content="https://hacks.murtopolis.com/og-image.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <!-- Fonts: Vignelli-inspired selection -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles loaded via src/main.ts -->
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav__inner container">
+      <div class="nav__brand">
+        <span class="nav__brand-text">Seven2 <span class="nav__x">x</span> Loveable</span>
+      </div>
+      <div class="nav__links">
+        <a href="#plan" class="nav__link">The Plan</a>
+        <a href="#blocks" class="nav__link">Blocks</a>
+        <a href="#projects" class="nav__link">Projects</a>
+        <a href="#awards" class="nav__link">Awards</a>
+        <a href="#reflections" class="nav__link">Reflections</a>
+        <a href="#run-your-own" class="nav__link">Run Your Own</a>
+      </div>
+      <button class="nav__toggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <div class="container">
+        <div class="hero__label mono-label fade-in">Seven2 — 2026</div>
+        <h1 class="hero__title fade-in">The<br>Hacks-a-Thon</h1>
+        <p class="hero__subtitle fade-in">We're all just hacks.<br>And that's the point.</p>
+        <div class="hero__meta fade-in">
+          <div class="hero__meta-item">
+            <span class="hero__meta-label">Duration</span>
+            <span class="hero__meta-value">2–3 Weeks</span>
+          </div>
+          <div class="hero__meta-item">
+            <span class="hero__meta-label">Platform</span>
+            <span class="hero__meta-value">Loveable</span>
+          </div>
+          <div class="hero__meta-item">
+            <span class="hero__meta-label">Format</span>
+            <span class="hero__meta-value">Solo Builds</span>
+          </div>
+          <div class="hero__meta-item">
+            <span class="hero__meta-label">Participation</span>
+            <span class="hero__meta-value">Required</span>
+          </div>
+        </div>
+        <blockquote class="hero__quote fade-in">
+          <p>We're calling this a Hacks-a-Thon for a reason: none of us are pretending to be expert developers (except our expert developers of course), and it's okay to be a hack. The Seven2 Hacks-a-Thon is a focused, time-blocked experiment designed to help everyone on our team learn how to build with AI. All you need is an idea, curiosity, and a willingness to try.</p>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- The Plan -->
+    <section class="section" id="plan">
+      <div class="container">
+        <div class="section__header">
+          <span class="mono-label">01</span>
+          <h2 class="section__title">The Plan</h2>
+        </div>
+
+        <div class="plan__intro">
+          <p class="lead">This playbook outlines the structure we'll follow to move from idea to live demo in just a few weeks. It's more than just a sprint. It's your chance to unlock a new creative superpower.</p>
+        </div>
+
+        <h3 class="subsection-title">Roles</h3>
+        <div class="roles-grid">
+          <div class="role-card">
+            <div class="role-card__name">Nick</div>
+            <div class="role-card__title">Facilitation</div>
+            <ul class="role-card__list">
+              <li>Kickoff</li>
+              <li>Office Hours</li>
+              <li>Facilitation &amp; Q&amp;A</li>
+              <li>Final Showcase Host</li>
+              <li>Reflection Questions</li>
+            </ul>
+          </div>
+          <div class="role-card">
+            <div class="role-card__name">Callen</div>
+            <div class="role-card__title">Logistics</div>
+            <ul class="role-card__list">
+              <li>Calendar Blocking</li>
+              <li>Meeting Setup</li>
+              <li>Recording Transcripts</li>
+              <li>Logistics Coordination</li>
+            </ul>
+          </div>
+          <div class="role-card">
+            <div class="role-card__name">Everyone</div>
+            <div class="role-card__title">Builders</div>
+            <ul class="role-card__list">
+              <li>Build Solo Project</li>
+              <li>Update IdeaLab</li>
+              <li>Demo at Final Showcase</li>
+              <li>Share Reflections</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 class="subsection-title">Outcomes</h3>
+        <div class="outcomes">
+          <p>By the end of the Hacks-a-Thon, every participant will have:</p>
+          <ul class="outcomes__list">
+            <li>Built a live prototype</li>
+            <li>Updated IdeaLab with their project URL</li>
+            <li>Demonstrated their work</li>
+            <li>Reflected on what they learned</li>
+          </ul>
+          <p class="outcomes__coda">Success is defined by participation, momentum, and growth — not perfection.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Blocks -->
+    <section class="section" id="blocks">
+      <div class="container">
+        <div class="section__header">
+          <span class="mono-label">02</span>
+          <h2 class="section__title">The Blocks</h2>
+        </div>
+        <p class="lead">It's all about time blocking. Each block moves participants from idea to live demo while staying integrated into the normal rhythm of work.</p>
+
+        <div class="timeline">
+
+          <!-- Block Zero -->
+          <div class="block-card" data-block="zero">
+            <div class="block-card__connector"></div>
+            <div class="block-card__header">
+              <span class="block-card__number">ZERO</span>
+              <div class="block-card__meta">
+                <h3 class="block-card__title">Kickoff</h3>
+                <span class="block-card__duration">15 min</span>
+              </div>
+            </div>
+            <p class="block-card__purpose">Introduce Loveable, explain vibe coding, set expectations, and outline the structure. Encourage the use of AI to help you work with AI.</p>
+            <p class="block-card__intent">Remove intimidation and create clarity before ideas begin.</p>
+            <div class="block-card__checklist">
+              <button class="block-card__toggle" aria-expanded="false">
+                <span>Checklist</span>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+              <div class="block-card__checklist-content" hidden>
+                <div class="checklist-group">
+                  <h4>Before</h4>
+                  <ul>
+                    <li>Calendar invite sent</li>
+                    <li>Recording enabled</li>
+                    <li>Loveable demo prepared</li>
+                    <li>Account setup instructions ready</li>
+                    <li>Helpful YouTube links ready</li>
+                    <li>Slack channel (#hacks-a-thon) created</li>
+                    <li>IdeaLab instructions shared</li>
+                  </ul>
+                </div>
+                <div class="checklist-group">
+                  <h4>During</h4>
+                  <ul>
+                    <li>Record session</li>
+                    <li>Share Loveable resources in Slack</li>
+                    <li>Reinforce passion-driven projects</li>
+                  </ul>
+                </div>
+                <div class="checklist-group">
+                  <h4>After</h4>
+                  <ul>
+                    <li>Share recording with Nick</li>
+                    <li>Confirm subscription access for all</li>
+                  </ul>
+                </div>
+                <div class="checklist-group checklist-group--checkin">
+                  <h4>Next Day Check-In</h4>
+                  <p>Quick reactions and initial thoughts.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Block 1 -->
+          <div class="block-card" data-block="1">
+            <div class="block-card__connector"></div>
+            <div class="block-card__header">
+              <span class="block-card__number">01</span>
+              <div class="block-card__meta">
+                <h3 class="block-card__title">Sprint to the IdeaLab</h3>
+                <span class="block-card__duration">30 min</span>
+              </div>
+            </div>
+            <p class="block-card__purpose">Your chance to brainstorm, define and submit your project idea at IdeaLab.seven2.com</p>
+            <p class="block-card__intent">Commit to a direction and articulate why the idea matters to you.</p>
+            <div class="block-card__checklist">
+              <button class="block-card__toggle" aria-expanded="false">
+                <span>Checklist</span>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+              <div class="block-card__checklist-content" hidden>
+                <div class="checklist-group">
+                  <h4>Participant Requirements</h4>
+                  <ul>
+                    <li>Idea title</li>
+                    <li>Who it's for</li>
+                    <li>Problem it solves</li>
+                    <li>Why it matters to you</li>
+                    <li>Initial direction</li>
+                    <li>Use AI to help you AI</li>
+                  </ul>
+                </div>
+                <div class="checklist-group">
+                  <h4>After</h4>
+                  <ul>
+                    <li>100% submission confirmed</li>
+                  </ul>
+                </div>
+                <div class="checklist-group checklist-group--checkin">
+                  <h4>Next Day Check-In</h4>
+                  <p>Share the title of your idea (teaser only).</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Block 2 -->
+          <div class="block-card" data-block="2">
+            <div class="block-card__connector"></div>
+            <div class="block-card__header">
+              <span class="block-card__number">02</span>
+              <div class="block-card__meta">
+                <h3 class="block-card__title">Shark Tank, Minus the Sharks</h3>
+                <span class="block-card__duration">45 min</span>
+              </div>
+            </div>
+            <p class="block-card__purpose">Each participant delivers a 1-minute pitch with light feedback from the team.</p>
+            <p class="block-card__intent">Sharpen ideas and build collective energy.</p>
+            <div class="block-card__checklist">
+              <button class="block-card__toggle" aria-expanded="false">
+                <span>Checklist</span>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+              <div class="block-card__checklist-content" hidden>
+                <div class="checklist-group">
+                  <h4>Before</h4>
+                  <ul>
+                    <li>Pitch order is Status order</li>
+                    <li>Timer ready with 50-second warning tone</li>
+                    <li>Recording enabled</li>
+                  </ul>
+                </div>
+                <div class="checklist-group">
+                  <h4>During</h4>
+                  <ul>
+                    <li>Enforce 1-minute limit</li>
+                    <li>Keep feedback concise and encouraging</li>
+                  </ul>
+                </div>
+                <div class="checklist-group">
+                  <h4>After</h4>
+                  <ul>
+                    <li>Encourage Slack follow-up</li>
+                    <li>Participants refine IdeaLab entry if needed</li>
+                  </ul>
+                </div>
+                <div class="checklist-group checklist-group--checkin">
+                  <h4>Next Day Check-In</h4>
+                  <p>Did your idea change after getting feedback?</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Block 3 -->
+          <div class="block-card" data-block="3">
+            <div class="block-card__connector"></div>
+            <div class="block-card__header">
+              <span class="block-card__number">03</span>
+              <div class="block-card__meta">
+                <h3 class="block-card__title">Documentation Is Everything</h3>
+                <span class="block-card__duration">30 min</span>
+              </div>
+            </div>
+            <p class="block-card__purpose">Develop specifics around your idea using AI, ZERO.Prmptr.ai, IdeaLab, or all three.</p>
+            <p class="block-card__intent">Translate the idea into a low-prompt, buildable direction.</p>
+            <div class="block-card__checklist">
+              <button class="block-card__toggle" aria-expanded="false">
+                <span>Checklist</span>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+              <div class="block-card__checklist-content" hidden>
+                <div class="checklist-group">
+                  <h4>Participant Requirements</h4>
+                  <ul>
+                    <li>Refined build direction</li>
+                    <li>Defined first milestone</li>
+                    <li>Updated IdeaLab entry</li>
+                  </ul>
+                </div>
+                <div class="checklist-group">
+                  <h4>After</h4>
+                  <ul>
+                    <li>Confirm build direction exists</li>
+                  </ul>
+                </div>
+                <div class="checklist-group checklist-group--checkin">
+                  <h4>Next Day Check-In</h4>
+                  <p>What are you building first?</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Block 4A -->
+          <div class="block-card" data-block="4a">
+            <div class="block-card__connector"></div>
+            <div class="block-card__header">
+              <span class="block-card__number">4A</span>
+              <div class="block-card__meta">
+                <h3 class="block-card__title">Here We Go!</h3>
+                <span class="block-card__duration">45 min</span>
+              </div>
+            </div>
+            <p class="block-card__purpose">It's time to start your project in Loveable!</p>
+            <p class="block-card__intent">Jumpstart development of your idea.</p>
+            <div class="block-card__checklist">
+              <button class="block-card__toggle" aria-expanded="false">
+                <span>Checklist</span>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+              <div class="block-card__checklist-content" hidden>
+                <div class="checklist-group">
+                  <h4>Before</h4>
+                  <ul>
+                    <li>Confirm Loveable accounts are active</li>
+                    <li>Office hours Zoom open</li>
+                  </ul>
+                </div>
+                <div class="checklist-group">
+                  <h4>During</h4>
+                  <ul>
+                    <li>Encourage Slack progress posts</li>
+                    <li>Provide live support</li>
+                  </ul>
+                </div>
+                <div class="checklist-group">
+                  <h4>Participant Requirements</h4>
+                  <ul>
+                    <li>Begin building</li>
+                    <li>Publish early working version (even rough)</li>
+                  </ul>
+                </div>
+                <div class="checklist-group checklist-group--checkin">
+                  <h4>Next Day Check-In</h4>
+                  <p>What did you get working?</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Block 4B -->
+          <div class="block-card" data-block="4b">
+            <div class="block-card__connector"></div>
+            <div class="block-card__header">
+              <span class="block-card__number">4B</span>
+              <div class="block-card__meta">
+                <h3 class="block-card__title">Build Session 2</h3>
+                <span class="block-card__duration">45 min</span>
+              </div>
+            </div>
+            <p class="block-card__purpose">Protected build time with optional office hours.</p>
+            <p class="block-card__intent">Iterate and improve.</p>
+            <div class="block-card__checklist">
+              <button class="block-card__toggle" aria-expanded="false">
+                <span>Checklist</span>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+              <div class="block-card__checklist-content" hidden>
+                <div class="checklist-group">
+                  <h4>During</h4>
+                  <ul>
+                    <li>Office hours open</li>
+                    <li>Slack reminder to post progress</li>
+                  </ul>
+                </div>
+                <div class="checklist-group">
+                  <h4>Participant Requirements</h4>
+                  <ul>
+                    <li>Improve functionality</li>
+                    <li>Refine demo flow</li>
+                  </ul>
+                </div>
+                <div class="checklist-group checklist-group--checkin">
+                  <h4>Next Day Check-In</h4>
+                  <p>What improved?</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Block 4C -->
+          <div class="block-card" data-block="4c">
+            <div class="block-card__connector"></div>
+            <div class="block-card__header">
+              <span class="block-card__number">4C</span>
+              <div class="block-card__meta">
+                <h3 class="block-card__title">Your Final Build Session</h3>
+                <span class="block-card__duration">45 min</span>
+              </div>
+            </div>
+            <p class="block-card__purpose">This is your last time-blocked build session. However, you are free to work on it further in your free time.</p>
+            <p class="block-card__intent">Polish demo flow and prepare for showcase.</p>
+            <div class="block-card__checklist">
+              <button class="block-card__toggle" aria-expanded="false">
+                <span>Checklist</span>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+              <div class="block-card__checklist-content" hidden>
+                <div class="checklist-group">
+                  <h4>During</h4>
+                  <ul>
+                    <li>Office hours open</li>
+                    <li>Encourage final polish</li>
+                  </ul>
+                </div>
+                <div class="checklist-group">
+                  <h4>Participant Requirements</h4>
+                  <ul>
+                    <li>Final Loveable URL ready</li>
+                    <li>IdeaLab updated with live link</li>
+                    <li>3-minute demo prepared</li>
+                  </ul>
+                </div>
+                <div class="checklist-group checklist-group--checkin">
+                  <h4>Next Day Check-In</h4>
+                  <p>Are you demo-ready?</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Final Block -->
+          <div class="block-card" data-block="final">
+            <div class="block-card__connector"></div>
+            <div class="block-card__header">
+              <span class="block-card__number">FINAL</span>
+              <div class="block-card__meta">
+                <h3 class="block-card__title">Showcase Showdown</h3>
+                <span class="block-card__duration">2 &times; 60 min</span>
+              </div>
+            </div>
+            <p class="block-card__purpose">Each participant presents a 3-minute (or less) demo followed by 2-minute Q&amp;A from the team.</p>
+            <p class="block-card__intent">Celebrate learning, reflect on insights, and capture takeaways.</p>
+            <div class="block-card__checklist">
+              <button class="block-card__toggle" aria-expanded="false">
+                <span>Checklist</span>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+              <div class="block-card__checklist-content" hidden>
+                <div class="checklist-group">
+                  <h4>Before</h4>
+                  <ul>
+                    <li>Demo order finalized</li>
+                    <li>Meeting link distributed</li>
+                    <li>Recording enabled</li>
+                    <li>All project URLs verified</li>
+                  </ul>
+                </div>
+                <div class="checklist-group">
+                  <h4>During</h4>
+                  <ul>
+                    <li>Enforce time limits</li>
+                    <li>Capture standout quotes</li>
+                    <li>Ask reflection questions</li>
+                  </ul>
+                </div>
+                <div class="checklist-group">
+                  <h4>Participant Requirements</h4>
+                  <ul>
+                    <li>3-minute or less demo</li>
+                    <li>Final link confirmed in IdeaLab</li>
+                    <li>Summary form completed</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.timeline -->
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section class="section" id="projects">
+      <div class="container">
+        <div class="section__header">
+          <span class="mono-label">03</span>
+          <h2 class="section__title">Projects</h2>
+        </div>
+        <p class="lead">What the team is building. Project cards are pulled from <a href="https://idealab.seven2.com" target="_blank" rel="noopener">IdeaLab</a> as ideas take shape.</p>
+        <div class="projects-grid" id="projects-grid">
+          <div class="project-card project-card--placeholder">
+            <p>Projects will appear here as the team submits ideas to IdeaLab.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Hacky Awards -->
+    <section class="section" id="awards">
+      <div class="container">
+        <div class="section__header">
+          <span class="mono-label">04</span>
+          <h2 class="section__title">The Hacky Awards</h2>
+        </div>
+        <p class="lead">Celebrating what matters. Winners announced at the Showcase Showdown.</p>
+
+        <div class="awards-grid">
+          <div class="award-card">
+            <span class="award-card__icon">&#9670;</span>
+            <h3 class="award-card__title">Most Creative Idea</h3>
+            <p class="award-card__winner" data-award="creative">TBD</p>
+          </div>
+          <div class="award-card">
+            <span class="award-card__icon">&#9670;</span>
+            <h3 class="award-card__title">Best Use of AI</h3>
+            <p class="award-card__winner" data-award="ai">TBD</p>
+          </div>
+          <div class="award-card">
+            <span class="award-card__icon">&#9670;</span>
+            <h3 class="award-card__title">Most Unexpected Build</h3>
+            <p class="award-card__winner" data-award="unexpected">TBD</p>
+          </div>
+          <div class="award-card">
+            <span class="award-card__icon">&#9670;</span>
+            <h3 class="award-card__title">Best Execution</h3>
+            <p class="award-card__winner" data-award="execution">TBD</p>
+          </div>
+          <div class="award-card">
+            <span class="award-card__icon">&#9670;</span>
+            <h3 class="award-card__title">People's Choice</h3>
+            <p class="award-card__winner" data-award="peoples-choice">TBD</p>
+          </div>
+          <div class="award-card">
+            <span class="award-card__icon">&#9670;</span>
+            <h3 class="award-card__title">Most Seven2 Energy</h3>
+            <p class="award-card__winner" data-award="seven2-energy">TBD</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reflections -->
+    <section class="section" id="reflections">
+      <div class="container">
+        <div class="section__header">
+          <span class="mono-label">05</span>
+          <h2 class="section__title">Reflections</h2>
+        </div>
+        <p class="lead">What the team discovered along the way.</p>
+
+        <div class="reflections__questions">
+          <ol class="reflection-prompts">
+            <li>What surprised you the most?</li>
+            <li>What do you wish you would have known going into this?</li>
+            <li>What did you learn along the way?</li>
+            <li>What would you build next?</li>
+            <li>Did this change how you think about AI or vibe coding?</li>
+            <li>What advice would you give to another creative starting this?</li>
+            <li>What might help future Seven2 creatives jump into vibe coding faster?</li>
+          </ol>
+        </div>
+
+        <div class="reflections__quotes" id="reflections-quotes">
+          <p class="reflections__placeholder">Featured reflections will appear here after the Showcase.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Run Your Own -->
+    <section class="section" id="run-your-own">
+      <div class="container">
+        <div class="section__header">
+          <span class="mono-label">06</span>
+          <h2 class="section__title">Run Your Own</h2>
+        </div>
+        <div class="run-your-own__content">
+          <p class="lead">Want to run a Hacks-a-Thon at your company? Here's the framework.</p>
+          <div class="run-your-own__summary">
+            <div class="run-your-own__step">
+              <span class="mono-label">A</span>
+              <h3>Pick Your Platform</h3>
+              <p>Choose an AI builder like Loveable. Give everyone a subscription. Lower the barrier to zero.</p>
+            </div>
+            <div class="run-your-own__step">
+              <span class="mono-label">B</span>
+              <h3>Block the Time</h3>
+              <p>2–3 weeks. Short, focused sessions (15–45 min). Integrated into normal work. Use daily standups for check-ins.</p>
+            </div>
+            <div class="run-your-own__step">
+              <span class="mono-label">C</span>
+              <h3>Structure the Journey</h3>
+              <p>Kickoff, ideation, pitches, documentation, build sessions, then a showcase. Each phase has a purpose.</p>
+            </div>
+            <div class="run-your-own__step">
+              <span class="mono-label">D</span>
+              <h3>Celebrate the Learning</h3>
+              <p>Awards, reflections, demos. Success is participation and growth, not production-ready apps.</p>
+            </div>
+          </div>
+          <div class="run-your-own__downloads" id="downloads">
+            <h3 class="subsection-title">Downloads</h3>
+            <p>Resources to get you started — coming soon after the event wraps.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__brands">
+        <a href="https://seven2.com" target="_blank" rel="noopener" class="footer__brand">Seven2</a>
+        <span class="footer__divider">&times;</span>
+        <a href="https://lovable.dev" target="_blank" rel="noopener" class="footer__brand">Loveable</a>
+      </div>
+      <div class="footer__venture">A Murtopolis Venture</div>
+      <div class="footer__links">
+        <a href="https://seven2.com" target="_blank" rel="noopener">seven2.com</a>
+        <a href="https://lovable.dev" target="_blank" rel="noopener">lovable.dev</a>
+        <a href="https://murtopolis.com" target="_blank" rel="noopener">murtopolis.com</a>
+      </div>
+      <p class="footer__copyright">&copy; 2026 Seven2. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
