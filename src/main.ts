@@ -5,6 +5,7 @@ import './styles/typography.css'
 import './styles/components.css'
 import './styles/sections.css'
 import './styles/animations.css'
+import './styles/vote.css'
 
 import { initScrollAnimations } from './utils/scroll'
 import { initChecklists } from './utils/expand'

@@ -1,13 +1,8 @@
 import { fetchAwards, type Award } from '../supabase/queries'
+import { CATEGORIES } from '../shared/categories'
 
-const AWARD_SLOTS: Record<string, string> = {
-  'Most Creative Idea': 'creative',
-  'Best Use of AI': 'ai',
-  'Most Unexpected Build': 'unexpected',
-  'Best Execution': 'execution',
-  "People's Choice": 'peoples-choice',
-  'Most Seven2 Energy': 'seven2-energy',
-}
+const AWARD_SLOTS: Record<string, string> = {}
+CATEGORIES.forEach(c => { AWARD_SLOTS[c.name] = c.key })
 
 export async function renderAwards(): Promise<void> {
   const awards = await fetchAwards()
