@@ -12,6 +12,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         vote: resolve(__dirname, 'vote.html'),
         admin: resolve(__dirname, 'admin.html'),
+        reflect: resolve(__dirname, 'reflect.html'),
       },
     },
   },

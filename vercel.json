@@ -4,6 +4,7 @@
   "framework": "vite",
   "rewrites": [
     { "source": "/vote", "destination": "/vote.html" },
-    { "source": "/admin", "destination": "/admin.html" }
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/reflect", "destination": "/reflect.html" }
   ]
 }

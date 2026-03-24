@@ -4,14 +4,18 @@ import {
   getVotingConfig,
   fetchExcludedProjectIds,
   fetchAllVotes,
+  fetchAllReflections,
   toggleExclusion,
   toggleVoting,
   setVotingDeadline,
   updateVotePasscode,
+  updateReflectPasscode,
   updateAdminPasscode,
   announceWinner,
+  toggleFeatured,
   type VoteRecord,
   type VotingConfigResult,
+  type ReflectionRecord,
 } from '../supabase/vote-queries'
 import { CATEGORIES } from '../shared/categories'
 
@@ -19,6 +23,7 @@ let adminCode = ''
 let allProjects: IdeaLabIdea[] = []
 let excludedIds: Set<string> = new Set()
 let allVotes: VoteRecord[] = []
+let allReflections: ReflectionRecord[] = []
 let config: VotingConfigResult = { valid: false }
 
 function getApp(): HTMLElement {
@@ -76,16 +81,18 @@ async function handleAdminGate(e: Event): Promise<void> {
 async function loadDashboard(): Promise<void> {
   getApp().innerHTML = '<div class="admin-loading">Loading dashboard&hellip;</div>'
 
-  const [projects, excluded, votes, cfg] = await Promise.all([
+  const [projects, excluded, votes, reflections, cfg] = await Promise.all([
     fetchIdeas(),
     fetchExcludedProjectIds(),
     fetchAllVotes(),
+    fetchAllReflections(),
     getVotingConfig(adminCode),
   ])
 
   allProjects = projects
   excludedIds = excluded
   allVotes = votes
+  allReflections = reflections
   config = cfg
 
   renderDashboard()
@@ -107,6 +114,11 @@ function renderDashboard(): void {
         <h2 class="dashboard__heading">Voter Roll Call</h2>
         ${renderVoterList()}
       </div>
+      <div class="dashboard__section" id="section-reflections">
+        <h2 class="dashboard__heading">Reflections</h2>
+        <p class="dashboard__desc">View submitted reflections and toggle answers as featured on the main site.</p>
+        ${renderReflectionsAdmin()}
+      </div>
       <div class="dashboard__section" id="section-results">
         <h2 class="dashboard__heading">Results by Category</h2>
         ${renderResults()}
@@ -120,6 +132,7 @@ function renderDashboard(): void {
   `
   bindSettings()
   bindEligibility()
+  bindReflectionsAdmin()
   bindAnnounce()
 }
 
@@ -153,6 +166,14 @@ function renderSettings(): string {
         <p class="settings-card__value">${esc(passcode)}</p>
         <form class="settings-inline" id="vote-passcode-form">
           <input type="text" id="new-vote-passcode" placeholder="New passcode">
+          <button type="submit" class="settings-btn">Update</button>
+        </form>
+      </div>
+      <div class="settings-card">
+        <h3>Reflect Passcode</h3>
+        <p class="settings-card__value">${esc(config.reflect_passcode ?? '')}</p>
+        <form class="settings-inline" id="reflect-passcode-form">
+          <input type="text" id="new-reflect-passcode" placeholder="New passcode">
           <button type="submit" class="settings-btn">Update</button>
         </form>
       </div>
@@ -195,6 +216,15 @@ function bindSettings(): void {
     const val = input.value.trim()
     if (!val) return
     await updateVotePasscode(adminCode, val)
+    await loadDashboard()
+  })
+
+  document.getElementById('reflect-passcode-form')!.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const input = document.getElementById('new-reflect-passcode') as HTMLInputElement
+    const val = input.value.trim()
+    if (!val) return
+    await updateReflectPasscode(adminCode, val)
     await loadDashboard()
   })
 
@@ -343,6 +373,82 @@ function renderResults(): string {
     <p class="dashboard__count">${voterCount} voters across ${CATEGORIES.length} categories</p>
     ${sections}
   `
+}
+
+// ── Reflections Admin ──
+
+function renderReflectionsAdmin(): string {
+  const grouped = new Map<string, ReflectionRecord[]>()
+  allReflections.forEach(r => {
+    if (!grouped.has(r.participant_name)) grouped.set(r.participant_name, [])
+    grouped.get(r.participant_name)!.push(r)
+  })
+
+  const participantCount = grouped.size
+  const featuredCount = allReflections.filter(r => r.is_featured).length
+
+  if (participantCount === 0) {
+    return '<p class="dashboard__empty">No reflections submitted yet.</p>'
+  }
+
+  const sections = [...grouped.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([name, records]) => {
+      const answersHtml = records.map(r => {
+        const featured = r.is_featured
+        return `
+          <div class="reflect-admin-answer ${featured ? 'reflect-admin-answer--featured' : ''}">
+            <div class="reflect-admin-answer__question">${esc(r.question)}</div>
+            <div class="reflect-admin-answer__text">${esc(r.answer)}</div>
+            <button class="reflect-admin-answer__toggle"
+                    data-reflection-id="${esc(r.id)}"
+                    data-featured="${featured}">
+              ${featured ? '★ Featured' : '☆ Feature'}
+            </button>
+          </div>`
+      }).join('')
+
+      return `
+        <details class="reflect-admin-participant">
+          <summary class="reflect-admin-participant__summary">
+            <span class="reflect-admin-participant__name">${esc(name)}</span>
+            <span class="reflect-admin-participant__count">${records.length} answer${records.length !== 1 ? 's' : ''}</span>
+          </summary>
+          <div class="reflect-admin-participant__answers">
+            ${answersHtml}
+          </div>
+        </details>`
+    }).join('')
+
+  return `
+    <p class="dashboard__count">${participantCount} participant${participantCount !== 1 ? 's' : ''} &middot; ${featuredCount} featured</p>
+    <div class="reflect-admin-list">${sections}</div>
+  `
+}
+
+function bindReflectionsAdmin(): void {
+  document.querySelectorAll('.reflect-admin-answer__toggle').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const el = btn as HTMLButtonElement
+      el.disabled = true
+      const id = el.dataset.reflectionId!
+      const currentlyFeatured = el.dataset.featured === 'true'
+      const ok = await toggleFeatured(adminCode, id, !currentlyFeatured)
+      if (ok) {
+        const record = allReflections.find(r => r.id === id)
+        if (record) record.is_featured = !currentlyFeatured
+        const section = document.getElementById('section-reflections')!
+        section.innerHTML = `
+          <h2 class="dashboard__heading">Reflections</h2>
+          <p class="dashboard__desc">View submitted reflections and toggle answers as featured on the main site.</p>
+          ${renderReflectionsAdmin()}`
+        bindReflectionsAdmin()
+      } else {
+        el.disabled = false
+        el.textContent = 'Error'
+      }
+    })
+  })
 }
 
 // ── Announce Winners ──

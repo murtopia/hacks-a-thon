@@ -10,7 +10,21 @@ export interface VotingConfigResult {
   valid: boolean
   voting_open?: boolean
   vote_passcode?: string
+  reflect_passcode?: string
   voting_deadline?: string | null
+}
+
+export interface ReflectPasscodeResult {
+  valid: boolean
+}
+
+export interface ReflectionRecord {
+  id: string
+  participant_name: string
+  question: string
+  answer: string
+  is_featured: boolean
+  created_at: string
 }
 
 export interface VoteRecord {
@@ -168,6 +182,84 @@ export async function announceWinner(
     winner: winnerName,
     project: projectTitle,
     url: projectUrl,
+  })
+  if (error) return false
+  return data === true
+}
+
+// ── Reflections ──
+
+export async function verifyReflectPasscode(code: string): Promise<ReflectPasscodeResult> {
+  if (!hacksathon) return { valid: false }
+  const { data, error } = await hacksathon.rpc('verify_reflect_passcode', { code })
+  if (error) return { valid: false }
+  return data as ReflectPasscodeResult
+}
+
+export async function updateReflectPasscode(adminCode: string, newPasscode: string): Promise<boolean> {
+  if (!hacksathon) return false
+  const { data, error } = await hacksathon.rpc('update_reflect_passcode', {
+    admin_code: adminCode,
+    new_passcode: newPasscode,
+  })
+  if (error) return false
+  return data === true
+}
+
+export async function fetchReflectionsByParticipant(name: string): Promise<ReflectionRecord[]> {
+  if (!hacksathon) return []
+  const { data, error } = await hacksathon
+    .from('reflections')
+    .select('*')
+    .eq('participant_name', name)
+    .order('created_at')
+  if (error) return []
+  return data ?? []
+}
+
+export async function fetchAllReflections(): Promise<ReflectionRecord[]> {
+  if (!hacksathon) return []
+  const { data, error } = await hacksathon
+    .from('reflections')
+    .select('*')
+    .order('created_at')
+  if (error) return []
+  return data ?? []
+}
+
+export async function submitReflections(
+  participantName: string,
+  answers: { question: string; answer: string }[]
+): Promise<boolean> {
+  if (!hacksathon) return false
+  const rows = answers
+    .filter(a => a.answer.trim().length > 0)
+    .map(a => ({
+      participant_name: participantName,
+      question: a.question,
+      answer: a.answer.trim(),
+    }))
+  if (rows.length === 0) return false
+  const { error } = await hacksathon
+    .from('reflections')
+    .upsert(rows, { onConflict: 'participant_name,question', ignoreDuplicates: false })
+  if (error) {
+    console.warn('Failed to submit reflections:', error.message)
+    return false
+  }
+  return true
+}
+
+export async function toggleFeatured(
+  adminCode: string,
+  reflectionId: string,
+  featured: boolean
+): Promise<boolean> {
+  if (!hacksathon) return false
+  const { data, error } = await hacksathon.rpc('toggle_featured', {
+    admin_code: adminCode,
+    reflection_id: reflectionId,
+    featured,
   })
   if (error) return false
   return data === true

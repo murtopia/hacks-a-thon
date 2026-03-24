@@ -6,6 +6,7 @@ import './styles/components.css'
 import './styles/sections.css'
 import './styles/animations.css'
 import './styles/vote.css'
+import './styles/reflect.css'
 
 import { initScrollAnimations } from './utils/scroll'
 import { initChecklists } from './utils/expand'
