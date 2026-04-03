@@ -103,30 +103,34 @@ Every participant will have:
 
 ## 3. The Hacky Awards
 
-Six award categories, announced at the Showcase Showdown:
+Six award categories, voted on by the full team via a blind ballot at `/vote` and announced from the admin dashboard:
 
-| Award | Description |
-|---|---|
-| Most Creative Idea | The idea that made everyone say "why didn't I think of that?" |
-| Best Use of AI | Leveraged AI tools most effectively throughout the build process |
-| Most Unexpected Build | The project nobody saw coming |
-| Best Execution | Cleanest implementation and demo polish |
-| People's Choice | Voted favorite by the team |
-| Most Seven2 Energy | Embodies the Seven2 spirit -- creative, bold, and fun |
+| Award | Key | Description |
+|---|---|---|
+| Best in Show | `best-in-show` | The overall standout |
+| Shut Up and Take My Money | `take-my-money` | The one everyone actually wants to use |
+| Best Execution | `execution` | Cleanest build quality and implementation |
+| Most Creative Idea | `creative` | The idea that surprised everyone |
+| Best Shark Tank Pitch | `shark-tank` | Best presentation and storytelling during demos |
+| Most Seven2 Energy | `seven2-energy` | Creative, bold, and fun — pure Seven2 spirit |
+
+**Voting mechanics:** Each voter picks one project per category. Same project can win multiple awards. Ties result in shared awards. Voting is completely blind — voters cannot see results until winners are announced by the admin. A team passcode gates access to the ballot. The admin can open/close voting, set a deadline, and exclude specific projects from the ballot.
 
 ---
 
 ## 4. Reflection Questions
 
-Each participant fills out a reflection form with these questions (responses may be used for internal recap, case study, LinkedIn content, and future book material):
+Each participant submits answers via a dedicated form at `/reflect`, gated by a separate passcode. Responses are stored per-question per-participant with upsert support (participants can update their answers anytime). Responses may be used for internal recap, case study, LinkedIn content, and future book material.
 
-1. What surprised you the most?
-2. What do you wish you would have known going into this?
-3. What did you learn along the way?
-4. What would you build next?
-5. Did this change how you think about AI or vibe coding?
-6. What advice would you give to another creative starting this?
-7. What might help future Seven2 creatives jump into vibe coding faster?
+1. What surprised you the most about the experience?
+2. What do you wish you'd known before your very first prompt?
+3. What did you discover about your own creative process along the way?
+4. Did this unlock any ideas you're actually going to pursue?
+5. Did this change how you think about AI, vibe coding, or what's possible for you creatively?
+6. What advice would you give to another Seven2 creative who's nervous to start?
+7. What one thing — a tool, a resource, a mindset shift — would help future Seven2 creatives jump in faster?
+
+The admin can toggle individual answers as "featured" from the dashboard, which immediately displays them on the main site's reflections section.
 
 ---
 
@@ -169,13 +173,15 @@ Each participant fills out a reflection form with these questions (responses may
 
 ### The Hacky Awards (Section 04)
 - Six award category cards in a 3-column grid
-- Each card: diamond icon, category title, winner name (currently "TBD")
+- Each card: diamond icon, category title, winner name (or "TBD" before announcement)
 - Winners dynamically populated from Hacksathon Supabase `awards` table when `winner_name` is set
 - Announced winner styling: bolder text, optional project link
+- "Vote for the Hackies" CTA button linking to `/vote`
 
 ### Reflections (Section 05)
 - All 7 reflection questions displayed as a numbered list with monospace counters
-- Featured quotes section (currently placeholder) -- populated from Hacksathon Supabase `reflections` table where `is_featured = true`
+- "Share Your Reflections" CTA button linking to `/reflect`
+- Featured quotes section populated from Hacksathon Supabase `reflections` table where `is_featured = true` (toggled by admin)
 - Quote rendering: large serif pull-quote text with author attribution and question context
 
 ### Run Your Own (Section 06)
@@ -214,9 +220,11 @@ The site reads from two completely separate Supabase projects:
 - Also has external users from a public-facing version of IdeaLab -- the org filter ensures only Seven2 ideas appear on the Hacks-a-Thon site
 
 **Hacksathon Supabase** (project ID: `rzbmylyeacmjkipmpmwh`)
-- A dedicated project for event-specific data
-- All tables have public read-only RLS policies
-- Admin updates via the Supabase dashboard
+- A dedicated project for event-specific data, voting, and reflections
+- Core tables (`blocks`, `awards`, `downloadable_assets`) have public read-only RLS policies
+- `votes` and `reflections` have public read + insert + update policies for ballot/form submissions
+- `voting_config` has no public policies -- accessible only via SECURITY DEFINER RPC functions
+- Admin operations (toggle voting, announce winners, feature reflections, manage passcodes) are all handled through RPCs gated by the admin passcode
 
 ### Environment Variables
 ```
@@ -302,6 +310,61 @@ Other IdeaLab tables (not used by this site): `profiles`, `idea_comments`, `idea
 | sort_order | integer | Display order |
 | created_at | timestamptz | |
 
+### Hacksathon: `voting_config` table (singleton)
+
+| Column | Type | Notes |
+|---|---|---|
+| id | integer | Always 1 (CHECK constraint) |
+| voting_open | boolean | Whether the ballot is accepting votes |
+| vote_passcode | text | Passcode for `/vote` (default: `seven2hacks`) |
+| admin_passcode | text | Passcode for `/admin` (default: `hackyadmin`) |
+| reflect_passcode | text | Passcode for `/reflect` (default: `seven2reflect`) |
+| voting_deadline | text (nullable) | Freeform deadline text shown to voters |
+| updated_at | timestamptz | |
+
+No public RLS policies — accessible only via SECURITY DEFINER RPC functions.
+
+### Hacksathon: `votes` table
+
+| Column | Type | Notes |
+|---|---|---|
+| id | uuid | Primary key |
+| voter_name | text | Who voted |
+| category | text | Which award category |
+| project_title | text | The project they picked |
+| project_id | text (nullable) | IdeaLab project ID |
+| created_at | timestamptz | |
+
+Unique constraint on `(voter_name, category)` — one pick per person per category, with upsert support.
+
+### Hacksathon: `excluded_projects` table
+
+| Column | Type | Notes |
+|---|---|---|
+| id | uuid | Primary key |
+| project_id | text | IdeaLab project ID (unique) |
+| project_title | text | Display name |
+| created_at | timestamptz | |
+
+### Hacksathon: RPC Functions (SECURITY DEFINER)
+
+All sensitive operations run through server-side functions so passcodes are never exposed to the client:
+
+| Function | Purpose |
+|---|---|
+| `verify_vote_passcode(code)` | Returns `{ valid, voting_open, deadline }` |
+| `verify_admin_passcode(code)` | Returns boolean |
+| `verify_reflect_passcode(code)` | Returns `{ valid }` |
+| `get_voting_config(admin_code)` | Returns all config values including passcodes (admin-gated) |
+| `toggle_voting(admin_code, is_open)` | Open/close voting |
+| `set_voting_deadline(admin_code, deadline)` | Set deadline text |
+| `update_vote_passcode(admin_code, new_passcode)` | Change vote passcode |
+| `update_admin_passcode(admin_code, new_passcode)` | Change admin passcode |
+| `update_reflect_passcode(admin_code, new_passcode)` | Change reflect passcode |
+| `toggle_exclusion(admin_code, project_id, title, exclude)` | Mark project eligible/ineligible |
+| `announce_winner(admin_code, category, winner, project, url)` | Write winner to awards table |
+| `toggle_featured(admin_code, reflection_id, featured)` | Feature/unfeature a reflection answer |
+
 ---
 
 ## 8. Design Decisions
@@ -330,14 +393,15 @@ Originally planned to use the Murtopolis warm editorial palette (tans, browns, s
 
 ## 9. Current State
 
-### What's Live and Working
+### Marketing Site (`/`)
 - Full single-page site with all 8 sections
 - Sticky navigation with logo lockup and anchor links
 - All 8 blocks with expandable checklists
 - Live project cards from IdeaLab (filtered to Seven2 org)
 - Click-to-open project detail modal
-- Award categories displayed (winners TBD)
-- Reflection questions listed
+- Award categories displayed with "Vote for the Hackies" CTA
+- Reflection questions listed with "Share Your Reflections" CTA
+- Featured reflections rendered from Supabase when toggled by admin
 - "Run Your Own" framework section
 - Responsive design (mobile hamburger nav, stacked grids)
 - Scroll-triggered fade-in animations
@@ -345,46 +409,66 @@ Originally planned to use the Murtopolis warm editorial palette (tans, browns, s
 - Auto-deploy from GitHub main branch to Vercel
 - Custom domain: hacks.murtopolis.com
 
-### What's Seeded in Supabase
-- 8 blocks with titles, descriptions, purposes, durations (all status: `upcoming`)
-- 6 award categories with descriptions (all `winner_name: null`)
+### Voting System (`/vote`)
+- Passcode-gated ballot with voter name (stored in localStorage)
+- Respects voting open/closed state and deadline from admin settings
+- Displays all IdeaLab projects minus excluded ones
+- Pick one project per category across 6 award categories
+- Upsert support — voters can change their picks before voting closes
+- Voting is completely blind; no results visible to voters
+
+### Admin Dashboard (`/admin`)
+- Passcode-gated admin access
+- Voting settings: open/close voting, set deadline, manage all three passcodes
+- Project eligibility: toggle IdeaLab projects on/off the ballot
+- Voter roll call: see who has voted and their completion status
+- Reflections admin: view all submissions grouped by participant, toggle featured
+- Results by category: tallied votes with percentages, individual voter names
+- Announce winners: one-click to write winner to awards table (updates main site instantly)
+
+### Reflections Form (`/reflect`)
+- Passcode-gated 7-question form with participant name
+- Pre-populates existing answers if participant has already submitted
+- Upsert support — participants can edit and resubmit anytime
+- Confirmation screen with summary and edit option
 
 ### What's Placeholder / Empty
-- Award winners (populated after Showcase Showdown)
-- Featured reflections (populated after event)
 - Downloadable assets (created post-event)
-- Block statuses (updated as the event progresses)
 - Downloads section says "coming soon after the event wraps"
 
 ---
 
 ## 10. Post-Event Workflow
 
-All post-event updates are done through the Supabase dashboard -- no code changes needed.
+Most post-event updates are done through the admin dashboard at `/admin` — no code changes or direct database access needed.
 
 ### Update Block Statuses
-In the `blocks` table, change `status` from `upcoming` to `completed` for each finished block. Set the current block to `active` during the event.
+In the Supabase dashboard, change `status` from `upcoming` to `completed` for each finished block. Set the current block to `active` during the event.
+
+### Run the Hacky Awards Vote
+1. Open voting from `/admin` settings
+2. Share the vote passcode and `hacks.murtopolis.com/vote` with the team
+3. Optionally set a deadline string
+4. Monitor voter participation and results in real-time from `/admin`
+5. Close voting when ready
 
 ### Announce Award Winners
-In the `awards` table, update each row:
-- `winner_name` -- the person's name
-- `project_title` -- what they built
-- `project_url` -- link to the live Loveable project
+From the `/admin` dashboard "Announce Winners" section:
+- Review vote tallies per category
+- Click "Announce Winner" for each category — writes directly to the `awards` table
+- The main site updates immediately with the winner's name, project, and link
 
-### Feature Reflection Quotes
-Insert rows into the `reflections` table:
-- `participant_name` -- who said it
-- `question` -- which of the 7 reflection questions
-- `answer` -- their actual response
-- `is_featured` -- set to `true` for quotes that should appear on the site
-
-Curate the best 5-10 quotes across different questions for a varied, compelling reflections section.
+### Collect and Feature Reflections
+1. Share the reflect passcode and `hacks.murtopolis.com/reflect` with the team
+2. Participants submit answers to 7 reflection questions
+3. In `/admin`, expand each participant's submissions
+4. Toggle standout answers as "featured" — they appear on the main site instantly
 
 ### Add Downloadable Assets
-Insert rows into the `downloadable_assets` table:
+Insert rows into the `downloadable_assets` table via Supabase dashboard:
 - `title` -- e.g., "The Playbook PDF"
 - `description` -- what it contains
-- `file_url` -- URL to the hosted file (can use Supabase Storage or any public URL)
+- `file_url` -- URL to the hosted file
 - `sort_order` -- display order
 
 Planned downloads: Playbook PDF, Checklist Template, Reflection Questions Sheet, Case Study Summary.
@@ -398,9 +482,6 @@ Not yet implemented. Should add PostHog tracking (same setup as main Murtopolis 
 
 ### Downloadable PDFs
 Need to be designed and created after the event. Should match the Vignelli aesthetic of the site. Formats: Playbook, Checklist, Reflection Questions, Case Study Summary.
-
-### IdeaLab Data Nuance
-IdeaLab has both Seven2 employees and external public users. The site filters by Seven2's organization_id, but the IdeaLab app itself currently shows all ideas to logged-in Seven2 users (not just Seven2 ideas). This is a separate issue in the IdeaLab Loveable project, not in the Hacks-a-Thon site.
 
 ---
 
@@ -425,13 +506,16 @@ IdeaLab has both Seven2 employees and external public users. The site filters by
 
 ```
 hacksathon-site/
-├── index.html                    # Single-page site, all sections
+├── index.html                    # Marketing site with all public sections
+├── vote.html                     # Hacky Awards ballot (noindex)
+├── admin.html                    # Admin dashboard (noindex)
+├── reflect.html                  # Reflection form (noindex)
 ├── PLANNING.md                   # This document
-├── README.md                     # Developer-focused project docs
+├── README.md                     # Developer/operator reference
 ├── package.json                  # Dependencies: vite, typescript, @supabase/supabase-js
-├── vite.config.ts                # Dev server on port 3000
+├── vite.config.ts                # Multi-page build config (4 HTML inputs), dev server port 3000
 ├── tsconfig.json                 # TypeScript config
-├── vercel.json                   # Vercel deployment config (framework: vite)
+├── vercel.json                   # Vercel config: rewrites for /vote, /admin, /reflect
 ├── .env.local                    # Local environment variables (git-ignored)
 ├── .gitignore                    # Ignores node_modules, dist, *.local
 ├── public/
@@ -441,16 +525,29 @@ hacksathon-site/
 │   ├── s2-lovable-lockup.png     # Full logo lockup (transparent PNG, 2140x306)
 │   └── s2-lovable-icons.png      # Icons-only lockup (Seven2 flags + Loveable heart)
 ├── src/
-│   ├── main.ts                   # Entry: imports CSS, initializes nav/checklists/animations/data
+│   ├── main.ts                   # Main site entry: imports CSS, initializes all modules
+│   ├── vote.ts                   # Vote page entry: imports CSS, initializes ballot
+│   ├── admin.ts                  # Admin page entry: imports CSS, initializes dashboard
+│   ├── reflect.ts                # Reflect page entry: imports CSS, initializes form
 │   ├── vite-env.d.ts             # TypeScript declarations for VITE_ env vars
+│   ├── shared/
+│   │   ├── categories.ts         # 6 award categories (key, name, description)
+│   │   └── questions.ts          # 7 reflection questions
 │   ├── sections/
 │   │   ├── projects.ts           # Fetches IdeaLab ideas, renders cards + modal
 │   │   ├── awards.ts             # Fetches awards, populates winner slots
 │   │   └── reflections.ts        # Fetches featured reflections, renders quotes
+│   ├── vote/
+│   │   └── ballot.ts             # Passcode gate, project selection, vote submission
+│   ├── admin/
+│   │   └── dashboard.ts          # Settings, eligibility, voters, results, announce, reflections
+│   ├── reflect/
+│   │   └── form.ts               # Passcode gate, 7-question form, upsert, confirmation
 │   ├── supabase/
 │   │   ├── idealab-client.ts     # createClient for IdeaLab Supabase
 │   │   ├── hacksathon-client.ts  # createClient for Hacksathon Supabase (nullable)
-│   │   └── queries.ts            # Typed fetch functions + interfaces
+│   │   ├── queries.ts            # Typed fetch functions for IdeaLab ideas, awards, reflections
+│   │   └── vote-queries.ts       # All voting, admin, and reflection RPC calls
 │   ├── styles/
 │   │   ├── tokens.css            # CSS custom properties: colors, spacing, type scale, transitions
 │   │   ├── base.css              # Reset, body defaults, selection, scroll-padding
@@ -459,56 +556,71 @@ hacksathon-site/
 │   │   ├── components.css        # Role cards, block cards, project cards, award cards,
 │   │   │                         # reflection prompts, modal, run-your-own steps
 │   │   ├── sections.css          # Nav, hero, generic section, footer, lockup links
-│   │   └── animations.css        # .fade-in with IntersectionObserver, stagger delays
+│   │   ├── animations.css        # .fade-in with IntersectionObserver, stagger delays
+│   │   ├── vote.css              # Vote ballot + "Vote for the Hackies" CTA on main site
+│   │   ├── admin.css             # Admin dashboard styles
+│   │   └── reflect.css           # Reflect form + "Share Your Reflections" CTA on main site
 │   └── utils/
 │       ├── scroll.ts             # IntersectionObserver for fade-in animations
 │       ├── expand.ts             # Checklist toggle (aria-expanded + hidden)
 │       └── nav.ts                # Mobile menu toggle, active section highlighting
 └── supabase/
-    └── migration.sql             # Full DDL + seed data for Hacksathon Supabase
+    ├── migration.sql             # Base schema + seed data for Hacksathon Supabase
+    ├── voting-migration.sql      # Voting system: tables, RLS, RPCs (apply after migration.sql)
+    └── reflections-migration.sql # Reflections system: column, constraint, RLS, RPCs (apply last)
 ```
 
 ---
 
 ## 14. Growth Opportunities
 
-These are natural extensions and ideas for building on top of what exists. None are committed -- they're starting points for future planning.
+### What Was Built (beyond the original scope)
 
-### During-Event Enhancements
+These started as future ideas and were implemented during the project:
+
+- **Hacky Awards voting system** — Full blind ballot at `/vote` with passcode gate, category-based voting, upsert support, and voting open/close controls
+- **Admin dashboard** — `/admin` with passcode gate, voting settings, project eligibility toggles, voter roll call, results tallies, winner announcement, and reflection management
+- **Reflections form** — `/reflect` with passcode gate, 7-question form, upsert support, and featured toggle from admin
+- **Multi-page architecture** — Vite multi-page build with Vercel rewrites for clean URLs
+
+### Future Ideas
+
+These are natural extensions for building on top of what exists. None are committed -- they're starting points for future planning.
+
+#### During-Event Enhancements
 - **Live block progress indicator:** Update block statuses in Supabase as the event progresses; the timeline visually reflects which phase is active/completed
 - **Slack integration:** Bot that posts to #hacks-a-thon when a new idea is submitted to IdeaLab or a project URL is added
 - **Countdown timer:** Show time remaining until the next block or the Showcase Showdown
 
-### Post-Event Case Study
+#### Post-Event Case Study
 - **Photo/video gallery:** Embed screenshots, demo recordings, or photos from the event
 - **Metrics dashboard:** Participation rate, number of live demos, AI tool usage stats, comfort-level growth
 - **LinkedIn case study generator:** Auto-format the best reflections and outcomes into a shareable post
 
-### Expanding to Other Companies
+#### Expanding to Other Companies
 - **White-label template:** Make the playbook and site structure available as a template other companies can fork and customize
 - **Parameterized setup:** Accept company name, brand colors, event dates, and platform choice as configuration rather than hardcoded content
 - **Hosted SaaS version:** A platform where any company can spin up their own Hacks-a-Thon instance with their branding
 
-### IdeaLab Integration Deepening
+#### IdeaLab Integration Deepening
 - **Bi-directional sync:** Allow the Hacks-a-Thon site to write back to IdeaLab (e.g., marking ideas as Hacks-a-Thon entries)
-- **Voting on the site:** Let visitors vote for People's Choice directly from the project cards
 - **Progress timeline per project:** Show a history of status changes (ideating -> building -> complete) with timestamps
 
-### Repeat Events
+#### Repeat Events
 - **Multi-event support:** If Seven2 runs this again, support multiple Hacks-a-Thons on the same site (archived past events, current event)
 - **Leaderboard across events:** Track who's participated, built the most, won awards across multiple Hacks-a-Thons
 - **Alumni showcase:** A permanent gallery of all projects ever built across all events
 
-### Content and Documentation
+#### Content and Documentation
 - **Downloadable playbook PDF:** Professionally designed, matching the Vignelli aesthetic
 - **Video walkthrough:** A recorded tour of the site and how to use it
 - **Book chapter material:** Nick mentioned potential book content -- the reflections and outcomes feed directly into this
 
-### Technical Improvements
+#### Technical Improvements
 - **PostHog analytics:** Track pageviews, section engagement, modal opens, outbound clicks to project URLs
 - **Image optimization:** Convert PNGs to WebP with fallbacks for smaller file sizes
 - **RSS feed or changelog:** For companies following the Hacks-a-Thon format, a feed of updates and new resources
-- **Admin panel:** Simple authenticated page for updating awards, reflections, and block statuses without needing the Supabase dashboard directly
+- **Block status management in admin:** Add block status updates to the admin dashboard instead of requiring Supabase dashboard access
 
 ---
 
