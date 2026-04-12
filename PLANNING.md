@@ -458,6 +458,8 @@ From the `/admin` dashboard "Announce Winners" section:
 - Click "Announce Winner" for each category — writes directly to the `awards` table
 - The main site updates immediately with the winner's name, project, and link
 
+For a live presentation on a conference call, open `/hacky-awards.html` — a standalone, full-screen slide deck. It provides a setup screen to enter/verify winners and runner-ups for each category, then presents them as click-through slides with category reveals, runner-up announcements, winner reveals with confetti animations, and a finale recap grid. Navigate with click, spacebar, or arrow keys.
+
 ### Collect and Feature Reflections
 1. Share the reflect passcode and `hacks.murtopolis.com/reflect` with the team
 2. Participants submit answers to 7 reflection questions
@@ -520,6 +522,7 @@ hacksathon-site/
 ├── .gitignore                    # Ignores node_modules, dist, *.local
 ├── public/
 │   ├── favicon.svg               # Black square with white "H"
+│   ├── hacky-awards.html         # Standalone awards presentation slide deck (click-through)
 │   ├── og-image.png              # 1200x630 social sharing image
 │   ├── og-image.svg              # SVG source of OG image
 │   ├── s2-lovable-lockup.png     # Full logo lockup (transparent PNG, 2140x306)
@@ -581,6 +584,7 @@ These started as future ideas and were implemented during the project:
 - **Hacky Awards voting system** — Full blind ballot at `/vote` with passcode gate, category-based voting, upsert support, and voting open/close controls
 - **Admin dashboard** — `/admin` with passcode gate, voting settings, project eligibility toggles, voter roll call, results tallies, winner announcement, and reflection management
 - **Reflections form** — `/reflect` with passcode gate, 7-question form, upsert support, and featured toggle from admin
+- **Awards presentation deck** — Full-screen, click-through slide deck (`/hacky-awards.html`) for presenting winners live on a conference call, with runner-up reveals, confetti winner animations, and a finale recap grid
 - **Multi-page architecture** — Vite multi-page build with Vercel rewrites for clean URLs
 
 ### Future Ideas

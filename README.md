@@ -19,8 +19,9 @@ The site is a **multi-page Vite application** with four HTML entry points, all b
 | `/vote` | `vote.html` | Hacky Awards ballot — pick one winner per category | Team passcode (`seven2hacks` default) |
 | `/admin` | `admin.html` | Dashboard for managing voting, awards, reflections, passcodes | Admin passcode (`hackyadmin` default) |
 | `/reflect` | `reflect.html` | 7-question reflection form for participants | Reflect passcode (`seven2reflect` default) |
+| `/hacky-awards.html` | `public/hacky-awards.html` | Full-screen slide deck for presenting award winners live | None (standalone HTML) |
 
-The `/vote`, `/admin`, and `/reflect` pages are `noindex` — they won't appear in search engines.
+The `/vote`, `/admin`, and `/reflect` pages are `noindex` — they won't appear in search engines. The awards presentation is a self-contained static HTML file with no database dependencies.
 
 ### Tech Stack
 
@@ -101,6 +102,7 @@ hacksathon-site/
 ├── reflect.html                  # Reflection form (noindex)
 ├── public/
 │   ├── favicon.svg               # "H" favicon
+│   ├── hacky-awards.html         # Standalone awards presentation slide deck
 │   ├── og-image.png              # 1200x630 social sharing image
 │   ├── og-image.svg              # SVG source of OG image
 │   ├── s2-lovable-lockup.png     # Seven2 x Loveable full logo lockup (transparent PNG)
@@ -256,6 +258,7 @@ The admin dashboard provides full control without needing the Supabase dashboard
 1. Close voting
 2. Review results by category in `/admin`
 3. Click "Announce Winner" for each category — this writes to the `awards` table and updates the main site immediately
+4. For a live presentation, open `/hacky-awards.html` — a full-screen slide deck that clicks through each category with runner-up reveals, winner reveals with confetti, and a finale recap. Enter/edit winners and runner-ups on the setup screen before starting.
 
 ### Collecting reflections
 1. Share the reflect passcode and `/reflect` URL with the team

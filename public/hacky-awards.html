@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Hacky Awards — Seven2</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #08091e; --gold: #ffd700; --silver: #c4cfdf;
+  --pink: #ff2d78; --cyan: #00e5ff; --purple: #9b5de5; --white: #fff;
+}
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); font-family: 'Nunito', sans-serif; color: var(--white); -webkit-font-smoothing: antialiased; }
+.gone { display: none !important; }
+
+/* CONFETTI */
+#cc { position: fixed; inset: 0; pointer-events: none; z-index: 9999; width: 100%; height: 100%; }
+
+/* ══ SETUP ═══════════════════════════════════════════════════ */
+#setup { position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; padding: 28px 24px 40px; background: var(--bg); z-index: 200; overflow-y: auto; }
+.setup-box { background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.09); border-radius: 22px; padding: 40px 44px; width: 100%; max-width: 640px; margin: auto; }
+.setup-logo { text-align: center; font-family: 'Fredoka One', cursive; font-size: 28px; color: var(--gold); margin-bottom: 4px; }
+.setup-sub { text-align: center; font-size: 11px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-bottom: 36px; }
+
+.ablock { margin-bottom: 26px; padding-bottom: 26px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.ablock:last-of-type { border-bottom: none; margin-bottom: 0; }
+.ablock-order { font-size: 10px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 4px; }
+.ablock-title { font-family: 'Fredoka One', cursive; font-size: 17px; color: var(--gold); margin-bottom: 14px; }
+
+.field { margin-bottom: 10px; }
+.field-label { display: block; font-size: 10px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
+.lbl-ru  { color: var(--silver); }
+.lbl-win { color: var(--cyan); }
+.field-input { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 11px 14px; color: var(--white); font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700; outline: none; transition: border-color 0.2s, background 0.2s; }
+.field-input:focus { border-color: var(--gold); background: rgba(255,215,0,0.05); }
+.field-input::placeholder { color: rgba(255,255,255,0.18); }
+.field-input.ru-input:focus { border-color: var(--silver); background: rgba(196,207,223,0.05); }
+.verify-note { font-size: 11px; font-weight: 700; color: rgba(255,170,0,0.75); margin-top: 5px; padding-left: 2px; }
+
+.start-btn { display: block; width: 100%; margin-top: 32px; padding: 16px; background: linear-gradient(135deg, #7b2fbe, var(--pink)); border: none; border-radius: 12px; color: var(--white); font-family: 'Fredoka One', cursive; font-size: 20px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; box-shadow: 0 4px 32px rgba(255,45,120,0.35); }
+.start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 44px rgba(255,45,120,0.45); }
+.start-btn:active { transform: translateY(0); }
+
+/* ══ PRESENTATION ════════════════════════════════════════════ */
+#presentation { position: fixed; inset: 0; cursor: pointer; overflow: hidden; }
+.bg-glow { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 50% at 50% 35%, rgba(155,93,229,0.14) 0%, transparent 65%); pointer-events: none; }
+.fd-wrap { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.fd { position: absolute; font-family: 'Fredoka One', cursive; color: var(--gold); opacity: 0.06; animation: floatD var(--dur) var(--del) ease-in-out infinite; }
+@keyframes floatD { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-18px) rotate(10deg)} }
+
+/* ── Slides ── */
+.slide { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 80px; text-align: center; opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
+.slide.active { opacity: 1; pointer-events: all; }
+
+/* TITLE */
+.t-eyebrow { font-size: clamp(12px,1.4vw,16px); font-weight:800; letter-spacing:6px; text-transform:uppercase; color:rgba(255,255,255,0.35); margin-bottom:28px; }
+.t-gem { font-size: clamp(70px,12vw,140px); line-height:1; color:var(--gold); display:block; margin-bottom:16px; animation: gemPulse 3s ease-in-out infinite; }
+@keyframes gemPulse { 0%,100%{text-shadow:0 0 60px rgba(255,215,0,0.3)} 50%{text-shadow:0 0 110px rgba(255,215,0,0.65)} }
+.t-heading { font-family:'Fredoka One',cursive; font-size:clamp(56px,10vw,130px); line-height:1; color:var(--white); margin-bottom:24px; }
+.t-tagline { font-size:clamp(14px,1.8vw,20px); font-weight:700; color:rgba(255,255,255,0.4); letter-spacing:3px; text-transform:uppercase; }
+
+/* CATEGORY */
+.c-badge { font-family:'Fredoka One',cursive; font-size:clamp(11px,1.3vw,15px); letter-spacing:7px; text-transform:uppercase; color:var(--cyan); margin-bottom:22px; }
+.c-name { font-family:'Fredoka One',cursive; font-size:clamp(40px,7.5vw,96px); line-height:1.08; color:var(--white); margin-bottom:18px; }
+.c-tagline { font-size:clamp(16px,2vw,24px); font-weight:700; font-style:italic; color:rgba(255,255,255,0.42); margin-bottom:60px; }
+.click-pill { display:inline-block; padding:10px 30px; border:1.5px solid rgba(255,255,255,0.15); border-radius:100px; font-size:11px; font-weight:800; letter-spacing:4px; text-transform:uppercase; color:rgba(255,255,255,0.28); animation:breathe 2.5s ease-in-out infinite; }
+
+/* RUNNER-UP */
+.ru-crumb { font-size:clamp(10px,1.1vw,13px); font-weight:800; letter-spacing:5px; text-transform:uppercase; color:rgba(255,255,255,0.22); margin-bottom:20px; }
+.ru-label { font-family:'Fredoka One',cursive; font-size:clamp(14px,1.8vw,20px); color:var(--silver); letter-spacing:4px; text-transform:uppercase; margin-bottom:18px; opacity:0.9; }
+.ru-name { font-family:'Fredoka One',cursive; font-size:clamp(44px,8vw,100px); line-height:1; color:rgba(255,255,255,0.88); word-break:break-word; max-width:90%; text-shadow:0 0 40px rgba(196,207,223,0.25); }
+.ru-name.ru-pop { animation:ruPop 0.65s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes ruPop { 0%{transform:scale(0.4);opacity:0} 100%{transform:scale(1);opacity:1} }
+
+/* WINNER */
+.w-crumb { font-size:clamp(10px,1.1vw,13px); font-weight:800; letter-spacing:5px; text-transform:uppercase; color:rgba(255,255,255,0.22); margin-bottom:22px; }
+.w-label { font-family:'Fredoka One',cursive; font-size:clamp(16px,2vw,24px); color:var(--pink); letter-spacing:3px; text-transform:uppercase; margin-bottom:18px; text-shadow:0 0 30px rgba(255,45,120,0.5); animation:breathe 1.2s ease-in-out infinite; }
+.w-name { font-family:'Fredoka One',cursive; font-size:clamp(54px,11vw,140px); line-height:1; color:var(--gold); word-break:break-word; max-width:90%; text-shadow:0 0 60px rgba(255,215,0,0.45); }
+.w-name.pop { animation:winPop 0.75s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes winPop { 0%{transform:scale(0.15) rotate(-8deg);opacity:0} 60%{transform:scale(1.06) rotate(1deg)} 100%{transform:scale(1) rotate(0deg);opacity:1} }
+.w-next { margin-top:48px; font-size:11px; font-weight:800; letter-spacing:4px; text-transform:uppercase; color:rgba(255,255,255,0.16); animation:breathe 3s ease-in-out infinite; }
+
+/* FINALE */
+.f-label { font-size:clamp(11px,1.3vw,15px); font-weight:800; letter-spacing:6px; text-transform:uppercase; color:rgba(255,255,255,0.35); margin-bottom:14px; }
+.f-heading { font-family:'Fredoka One',cursive; font-size:clamp(28px,4.5vw,58px); color:var(--gold); margin-bottom:36px; line-height:1.2; text-shadow:0 0 60px rgba(255,215,0,0.3); }
+.f-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; width:100%; max-width:980px; }
+.f-card { background:rgba(255,255,255,0.055); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:18px 16px; }
+.f-award { font-size:10px; font-weight:800; letter-spacing:2.5px; text-transform:uppercase; color:var(--cyan); margin-bottom:9px; }
+.f-winner { font-family:'Fredoka One',cursive; font-size:clamp(17px,2.2vw,26px); color:var(--gold); word-break:break-word; }
+
+/* NAV */
+#progress { position:fixed; bottom:28px; left:50%; transform:translateX(-50%); display:flex; gap:10px; z-index:100; transition:opacity 0.4s; }
+.dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.15); transition:all 0.35s; }
+.dot.done { background:rgba(255,215,0,0.4); }
+.dot.current { background:var(--gold); transform:scale(1.35); }
+#hint { position:fixed; bottom:26px; right:36px; font-size:11px; font-weight:800; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.22); z-index:100; transition:opacity 0.4s; animation:breathe 2.5s ease-in-out infinite; }
+#bk   { position:fixed; bottom:26px; left:36px;  font-size:11px; font-weight:800; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.14); z-index:100; transition:opacity 0.4s; }
+
+@keyframes breathe { 0%,100%{opacity:0.4} 50%{opacity:1} }
+</style>
+</head>
+<body>
+
+<canvas id="cc"></canvas>
+
+<!-- ══ SETUP ══════════════════════════════════════════════════ -->
+<div id="setup">
+  <div class="setup-box">
+    <div class="setup-logo">◆ The Hacky Awards</div>
+    <div class="setup-sub">Verify winners &amp; runner‑ups · then showtime</div>
+    <div id="setup-fields"></div>
+    <button class="start-btn" id="start-btn">🎉 Let's Get This Show Started</button>
+  </div>
+</div>
+
+<!-- ══ PRESENTATION ═══════════════════════════════════════════ -->
+<div id="presentation" class="gone">
+  <div class="bg-glow"></div>
+  <div class="fd-wrap" id="fdw"></div>
+  <div id="sw"></div>
+  <div id="progress"></div>
+  <div id="hint">CLICK TO ADVANCE ›</div>
+  <div id="bk">‹ BACK</div>
+</div>
+
+<script>
+/* ── Award config — lightest to grandest ── */
+const AWARDS = [
+  { name:"Most Seven2 Energy",        tagline:"Most unmistakably us",                     ru:"Fetch-a-Drink",             win:'"Cut-up" lyric idea generator', ok:true  },
+  { name:"Best Shark Tank Pitch",     tagline:"The one that sold the room",               ru:"Dreadlist",                 win:"Chris-Tron (3T Agent)",          ok:true  },
+  { name:"Most Creative Idea",        tagline:"The one that made us go 'wait, WHAT?'",   ru:"Fetch-a-Drink",             win:'"Cut-up" lyric idea generator', ok:true  },
+  { name:"Best Execution",            tagline:"The one that actually shipped",            ru:"Chris-Tron (3T Agent)",     win:"Drift",                          ok:true  },
+  { name:"Shut Up and Take My Money", tagline:"The one we'd actually pay for",            ru:"Analysis Paralysis Helper", win:"Drift",                          ok:false },
+  { name:"Best in Show",              tagline:"The one that had it all",                  ru:"Unimotion",                 win:"Drift",                          ok:false },
+];
+
+let RU  = AWARDS.map(a => a.ru);
+let WIN = AWARDS.map(a => a.win);
+
+// slides: 0=title, then per award: cat/ru/win (×6), then finale = 20 total
+const N = AWARDS.length;
+const TOTAL = 1 + N*3 + 1; // 20
+
+/* ── Confetti ─────────────────────────────────────── */
+const cvs=document.getElementById('cc'), cx=cvs.getContext('2d');
+let P=[], raf;
+function rsz(){ cvs.width=innerWidth; cvs.height=innerHeight; }
+rsz(); addEventListener('resize',rsz);
+
+function burst(){
+  const cols=['#ffd700','#ff2d78','#00e5ff','#9b5de5','#ff6b35','#fff','#a8ff3e','#ffb347'];
+  P=[];
+  for(let i=0;i<220;i++) P.push({x:Math.random()*cvs.width,y:Math.random()*cvs.height*.4-20,vx:(Math.random()-.5)*5,vy:Math.random()*-3+1,w:Math.random()*14+5,h:Math.random()*6+3,rot:Math.random()*360,rv:(Math.random()-.5)*9,g:Math.random()*.25+.12,col:cols[~~(Math.random()*cols.length)],a:1});
+  cancelAnimationFrame(raf); tick();
+}
+function tick(){
+  cx.clearRect(0,0,cvs.width,cvs.height);
+  P=P.filter(p=>p.a>.02);
+  for(const p of P){ p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.rot+=p.rv; if(p.y>cvs.height*.72)p.a-=.022; cx.save();cx.globalAlpha=p.a;cx.translate(p.x,p.y);cx.rotate(p.rot*Math.PI/180);cx.fillStyle=p.col;cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);cx.restore(); }
+  if(P.length) raf=requestAnimationFrame(tick); else cx.clearRect(0,0,cvs.width,cvs.height);
+}
+
+/* ── Setup form ─────────────────────────────────────────────── */
+const fieldsEl = document.getElementById('setup-fields');
+AWARDS.forEach((a,i)=>{
+  const d=document.createElement('div');
+  d.className='ablock';
+  d.innerHTML=`
+    <div class="ablock-order">Award ${String(i+1).padStart(2,'0')} of ${String(N).padStart(2,'0')}</div>
+    <div class="ablock-title">◆ ${a.name}</div>
+    <div class="field">
+      <label class="field-label lbl-ru" for="ru${i}">🥈 Runner-up / 2nd Place</label>
+      <input class="field-input ru-input" id="ru${i}" type="text" value="${a.ru}" autocomplete="off">
+    </div>
+    <div class="field">
+      <label class="field-label lbl-win" for="w${i}">🏆 Winner</label>
+      <input class="field-input" id="w${i}" type="text" value="${a.win}" autocomplete="off">
+    </div>
+    ${!a.ok?'<div class="verify-note">⚠️ Couldn\'t read clearly from the screenshot — please verify both fields above</div>':''}
+  `;
+  fieldsEl.appendChild(d);
+});
+
+// Enter/Tab advances through fields
+fieldsEl.addEventListener('keydown',e=>{
+  if(e.key!=='Enter') return;
+  const ins=[...fieldsEl.querySelectorAll('.field-input')];
+  const i=ins.indexOf(e.target);
+  if(i<ins.length-1){ e.preventDefault(); ins[i+1].focus(); }
+  else { e.preventDefault(); document.getElementById('start-btn').click(); }
+});
+
+document.getElementById('start-btn').addEventListener('click',e=>{
+  e.stopPropagation();
+  for(let i=0;i<N;i++){
+    const ru=(document.getElementById(`ru${i}`).value||'').trim();
+    const w=(document.getElementById(`w${i}`).value||'').trim();
+    if(!w){ alert(`Please enter a winner for "${AWARDS[i].name}"`); return; }
+    if(!ru){ alert(`Please enter a runner-up for "${AWARDS[i].name}"`); return; }
+    RU[i]=ru; WIN[i]=w;
+  }
+  launch();
+});
+
+/* ── Launch presentation ──────────────────────────── */
+function launch(){
+  document.getElementById('setup').classList.add('gone');
+  buildDiamonds(); buildSlides(); buildDots();
+  document.getElementById('presentation').classList.remove('gone');
+  let idx=0;
+
+  function show(n){
+    document.querySelectorAll('.slide').forEach(s=>s.classList.remove('active'));
+    const s=document.getElementById(`s${n}`); if(!s) return;
+    s.classList.add('active');
+    const t=typeOf(n);
+
+    if(t.kind==='runnerup'){
+      const el=document.getElementById(`ru${t.i}`);
+      if(el){ el.classList.remove('ru-pop'); void el.offsetWidth; el.classList.add('ru-pop'); }
+    }
+    if(t.kind==='winner'){
+      const el=document.getElementById(`wn${t.i}`);
+      if(el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+      setTimeout(burst,100);
+    }
+    if(t.kind==='finale'){ setTimeout(burst,180); setTimeout(burst,1900); }
+
+    // dots
+    AWARDS.forEach((_,i)=>{
+      const base=1+i*3, end=base+2, d=document.getElementById(`d${i}`);
+      if(!d) return;
+      d.className='dot'+((n>=base&&n<=end)?' current':n>end||n===TOTAL-1?' done':'');
+    });
+
+    const hideNav = t.kind==='title'||t.kind==='finale';
+    document.getElementById('progress').style.opacity = hideNav?0:1;
+    document.getElementById('hint').style.opacity = t.kind==='finale'?0:1;
+    document.getElementById('bk').style.opacity   = n>0?1:0;
+  }
+
+  const next=()=>{ if(idx<TOTAL-1) show(++idx); };
+  const prev=()=>{ if(idx>0)       show(--idx); };
+
+  document.addEventListener('keydown',e=>{
+    if(['Space','ArrowRight','Enter'].includes(e.code)){ e.preventDefault(); next(); }
+    if(e.code==='ArrowLeft'){ e.preventDefault(); prev(); }
+  });
+  document.getElementById('presentation').addEventListener('click', next);
+  show(0);
+}
+
+/* ── Helpers ─────────────────────────────────────── */
+function typeOf(n){
+  if(n===0) return {kind:'title'};
+  if(n===TOTAL-1) return {kind:'finale'};
+  const i=Math.floor((n-1)/3), phase=(n-1)%3;
+  return {kind:['category','runnerup','winner'][phase], i};
+}
+
+function buildDiamonds(){
+  let h='';
+  for(let i=0;i<20;i++){ const sz=[13,17,22,28][i%4]; h+=`<div class="fd" style="left:${Math.random()*100}%;top:${Math.random()*100}%;font-size:${sz}px;--dur:${7+Math.random()*8}s;--del:-${(Math.random()*10).toFixed(1)}s;">◆</div>`; }
+  document.getElementById('fdw').innerHTML=h;
+}
+
+function buildSlides(){
+  let h='';
+
+  h+=mk(0,`
+    <div class="t-eyebrow">Seven2 Hacks-a-Thon · 2026</div>
+    <span class="t-gem">◆</span>
+    <div class="t-heading">The Hacky Awards</div>
+    <div class="t-tagline">Celebrating the builders &nbsp;🎉</div>
+  `);
+
+  AWARDS.forEach((a,i)=>{
+    const ci=1+i*3, ri=2+i*3, wi=3+i*3, last=i===N-1;
+    h+=mk(ci,`
+      <div class="c-badge">Award ${String(i+1).padStart(2,'0')} of ${String(N).padStart(2,'0')}</div>
+      <div class="c-name">${a.name}</div>
+      <div class="c-tagline">${a.tagline}</div>
+      <div class="click-pill">Click to reveal the runner-up</div>
+    `);
+    h+=mk(ri,`
+      <div class="ru-crumb">◆ ${a.name} ◆</div>
+      <div class="ru-label">🥈 Runner-Up</div>
+      <div class="ru-name" id="ru${i}">${RU[i]}</div>
+      <div class="click-pill" style="margin-top:48px;">Click to reveal the winner</div>
+    `);
+    h+=mk(wi,`
+      <div class="w-crumb">◆ ${a.name} ◆</div>
+      <div class="w-label">And the winner is…</div>
+      <div class="w-name" id="wn${i}">${WIN[i]}</div>
+      <div class="w-next">${last?'Click to see the full recap':'Click for the next award'}</div>
+    `);
+  });
+
+  h+=mk(TOTAL-1,`
+    <div class="f-label">Seven2 Hacks-a-Thon · 2026</div>
+    <div class="f-heading">Congratulations to all our<br>Hacky Award winners 🏆</div>
+    <div class="f-grid">
+      ${AWARDS.map((a,i)=>`<div class="f-card"><div class="f-award">◆ ${a.name}</div><div class="f-winner">${WIN[i]}</div></div>`).join('')}
+    </div>
+  `);
+
+  document.getElementById('sw').innerHTML=h;
+}
+
+function mk(n,inner){ return `<div class="slide" id="s${n}">${inner}</div>`; }
+
+function buildDots(){
+  document.getElementById('progress').innerHTML=AWARDS.map((_,i)=>`<div class="dot" id="d${i}"></div>`).join('');
+}
+</script>
+</body>
+</html>
